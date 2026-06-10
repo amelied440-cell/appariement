@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demande d'appariement</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background: #f4f3fb;
+      color: #1a1a2e;
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .page-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* ── En-tête ── */
+    .form-header {
+      background: #534AB7;
+      border-radius: 14px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.25rem;
+    }
+    .form-header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .form-header h1 i { font-size: 20px; }
+
+    /* ── Notices ── */
+    .notice {
+      border-radius: 10px;
+      padding: 11px 15px;
+      font-size: 13.5px;
+      line-height: 1.6;
+      margin-bottom: .75rem;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .notice i { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+    .notice-amber { background: #FAEEDA; border: 1px solid #EF9F27; color: #633806; }
+    .notice-red   { background: #FCEBEB; border: 1px solid #F09595; color: #791F1F; font-weight: 500; margin-bottom: 1.75rem; }
+
+    /* ── Sections ── */
+    .sec { margin-bottom: 1.75rem; }
+
+    .stitle {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .stitle-a { color: #534AB7; border-bottom: 1px solid #AFA9EC; }
+    .stitle-b { color: #0F6E56; border-bottom: 1px solid #5DCAA5; }
+    .stitle-m { color: #5F5E5A; border-bottom: 1px solid #B4B2A9; }
+
+    /* ── Cards élèves ── */
+    .scard {
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+    .scard-a { background: #EEEDFE; border: 1px solid #AFA9EC; }
+    .scard-b { background: #E1F5EE; border: 1px solid #5DCAA5; }
+
+    .slabel {
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .slabel-a { color: #3C3489; }
+    .slabel-b { color: #085041; }
+
+    .av {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+    }
+    .av-a { background: #534AB7; color: #fff; }
+    .av-b { background: #0F6E56; color: #fff; }
+
+    /* ── Grilles ── */
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    @media (max-width: 520px) {
+      .row2, .row3 { grid-template-columns: 1fr; }
+    }
+
+    /* ── Champs ── */
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field label { font-size: 12px; color: #5F5E5A; font-weight: 500; }
+    .req { color: #D85A30; }
+
+    input[type=text], input[type=email], input[type=password], select, textarea {
+      font-family: inherit;
+      font-size: 13.5px;
+      color: #1a1a2e;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 8px 11px;
+      width: 100%;
+      transition: border-color .15s, box-shadow .15s;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #534AB7;
+      box-shadow: 0 0 0 3px rgba(83,74,183,.15);
+    }
+    textarea { resize: vertical; min-height: 90px; }
+
+    .scard-a input, .scard-a select { border-color: #AFA9EC; }
+    .scard-b input, .scard-b select { border-color: #5DCAA5; }
+
+    /* ── Pastilles ── */
+    .cg { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 2px; }
+    .cg label {
+      display: flex; align-items: center; gap: 5px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      cursor: pointer;
+      user-select: none;
+      transition: all .12s;
+      border: 1px solid;
+    }
+    .cg label input[type=checkbox] { display: none; }
+
+    .pill-a { background: #fff; border-color: #AFA9EC; color: #3C3489; }
+    .pill-a.checked { background: #534AB7; border-color: #534AB7; color: #fff; }
+
+    .pill-b { background: #fff; border-color: #5DCAA5; color: #085041; }
+    .pill-b.checked { background: #0F6E56; border-color: #0F6E56; color: #fff; }
+
+    .pill-check { display: inline-flex; align-items: center; justify-content: center;
+      width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid currentColor;
+      font-size: 10px; flex-shrink: 0; }
+    .pill-a.checked .pill-check,
+    .pill-b.checked .pill-check { border-color: rgba(255,255,255,.7); }
+
+    .tag {
+      font-size: 10px;
+      background: rgba(0,0,0,.08);
+      border-radius: 3px;
+      padding: 1px 5px;
+    }
+
+    /* ── Section motif ── */
+    .motif-card {
+      background: #F1EFE8;
+      border: 1px solid #B4B2A9;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+    .motif-card textarea { border-color: #B4B2A9; }
+
+    /* ── Bouton soumettre ── */
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #534AB7;
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 0 24px;
+      height: 42px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .15s, transform .1s;
+    }
+    .btn-submit:hover { background: #3C3489; }
+    .btn-submit:active { transform: scale(.98); }
+
+    /* ── Messages ── */
+    .msg {
+      display: none;
+      border-radius: 9px;
+      padding: 11px 15px;
+      font-size: 13.5px;
+      margin-top: 12px;
+    }
+    .msg-ok  { background: #EAF3DE; border: 1px solid #97C459; color: #27500A; }
+    .msg-err { background: #FCEBEB; border: 1px solid #F09595; color: #A32D2D; }
+
+    /* ── Confirmation finale ── */
+    #confirmation {
+      display: none;
+      background: #fff;
+      border: 1px solid #97C459;
+      border-radius: 14px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    #confirmation .big-icon { font-size: 48px; color: #3B6D11; margin-bottom: 1rem; }
+    #confirmation h2 { font-size: 18px; font-weight: 600; color: #27500A; margin-bottom: .5rem; }
+    #confirmation p { font-size: 14px; color: #5F5E5A; line-height: 1.6; }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: rgba(0,0,0,.08); margin: 1.75rem 0; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      margin-top: 2.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <div class="form-header">
+    <h1><i class="ti ti-users"></i> Demande d'appariement</h1>
+  </div>
+
+  <div class="notice notice-amber">
+    <i class="ti ti-info-circle"></i>
+    <span>Ce formulaire vous permet de signaler un souhait de regroupement avec un·e camarade pour l'année prochaine. Les effectifs et les contraintes de constitution des classes ne permettent pas de garantir la satisfaction de toutes les demandes. Chaque situation sera examinée avec attention, dans la limite des possibilités organisationnelles.</span>
+  </div>
+  <div class="notice notice-red">
+    <i class="ti ti-alert-triangle"></i>
+    <span>Ce formulaire est le seul canal de traitement des demandes d'appariement. Aucune demande formulée à la rentrée ou en dehors de cet outil ne pourra être prise en compte.</span>
+  </div>
+
+  <div id="form-body">
+
+    <!-- ÉLÈVE A -->
+    <div class="sec">
+      <p class="stitle stitle-a"><i class="ti ti-user" style="font-size:13px"></i> Élève demandeur</p>
+      <div class="scard scard-a">
+        <div class="slabel slabel-a"><span class="av av-a">A</span> Votre profil</div>
+        <div class="row2">
+          <div class="field"><label>Nom <span class="req">*</span></label><input type="text" id="a-nom" placeholder="Nom de famille" autocomplete="family-name"></div>
+          <div class="field"><label>Prénom <span class="req">*</span></label><input type="text" id="a-prenom" placeholder="Prénom" autocomplete="given-name"></div>
+        </div>
+        <div class="row3">
+          <div class="field">
+            <label>Niveau <span class="req">*</span></label>
+            <select id="a-niveau">
+              <option value="">— Choisir —</option>
+              <option>2nde</option><option>1re</option><option>Terminale</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>LVA</label>
+            <select id="a-lva"><option value="Anglais">Anglais</option></select>
+          </div>
+          <div class="field">
+            <label>LVB</label>
+            <select id="a-lvb">
+              <option value="Non suivie">LVB non suivie</option>
+              <option>Allemand</option><option>Espagnol</option><option>Italien</option><option>Chinois</option><option>CNED</option>
+            </select>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:12px">
+          <label style="margin-bottom:6px">EDS – Enseignements de spécialité</label>
+          <div class="cg" id="a-eds">
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="Maths"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Maths</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="PH-CH"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> PH-CH</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="NSI"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> NSI</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="SVT"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> SVT</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="SES"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> SES</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="LLCE Anglais"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> LLCE Anglais</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="AMC"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> AMC</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="HGGSP"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> HGGSP</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="HLP"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> HLP</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="CIAV"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> CIAV</label>
+          </div>
+        </div>
+        <div class="field">
+          <label style="margin-bottom:6px">Options <span style="font-size:11px;font-weight:400;color:#888">(les restrictions de niveau s'appliquent)</span></label>
+          <div class="cg" id="a-opts">
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="Latin"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Latin</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="Euro Anglais"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Euro Anglais</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="Euro Espagnol"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Euro Espagnol</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="Cinéma"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Cinéma</label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="Sciences Labo (2nde)"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Sciences Labo <span class="tag">2nde</span></label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="Biotechnologies (2nde)"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Biotechnologies <span class="tag">2nde</span></label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="DGEMC (Tle)"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> DGEMC <span class="tag">Tle</span></label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="Maths complémentaires (Tle)"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Maths complémentaires <span class="tag">Tle</span></label>
+            <label class="pill-a" onclick="toggle(this)"><input type="checkbox" value="Maths expertes (Tle)"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Maths expertes <span class="tag">Tle</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ÉLÈVE B -->
+    <div class="sec">
+      <p class="stitle stitle-b"><i class="ti ti-user" style="font-size:13px"></i> Élève demandé·e</p>
+      <div class="scard scard-b">
+        <div class="slabel slabel-b"><span class="av av-b">B</span> Profil élève B</div>
+        <div class="row2">
+          <div class="field"><label>Nom <span class="req">*</span></label><input type="text" id="b-nom" placeholder="Nom de famille"></div>
+          <div class="field"><label>Prénom <span class="req">*</span></label><input type="text" id="b-prenom" placeholder="Prénom"></div>
+        </div>
+        <div class="row3">
+          <div class="field">
+            <label>Niveau <span class="req">*</span></label>
+            <select id="b-niveau">
+              <option value="">— Choisir —</option>
+              <option>2nde</option><option>1re</option><option>Terminale</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>LVA</label>
+            <select id="b-lva"><option value="Anglais">Anglais</option></select>
+          </div>
+          <div class="field">
+            <label>LVB</label>
+            <select id="b-lvb">
+              <option value="Non suivie">LVB non suivie</option>
+              <option>Allemand</option><option>Espagnol</option><option>Italien</option><option>Chinois</option><option>CNED</option>
+            </select>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:12px">
+          <label style="margin-bottom:6px">EDS – Enseignements de spécialité</label>
+          <div class="cg" id="b-eds">
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="Maths"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Maths</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="PH-CH"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> PH-CH</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="NSI"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> NSI</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="SVT"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> SVT</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="SES"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> SES</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="LLCE Anglais"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> LLCE Anglais</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="AMC"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> AMC</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="HGGSP"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> HGGSP</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="HLP"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> HLP</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="CIAV"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> CIAV</label>
+          </div>
+        </div>
+        <div class="field">
+          <label style="margin-bottom:6px">Options</label>
+          <div class="cg" id="b-opts">
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="Latin"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Latin</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="Euro Anglais"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Euro Anglais</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="Euro Espagnol"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Euro Espagnol</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="Cinéma"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Cinéma</label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="Sciences Labo (2nde)"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Sciences Labo <span class="tag">2nde</span></label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="Biotechnologies (2nde)"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Biotechnologies <span class="tag">2nde</span></label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="DGEMC (Tle)"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> DGEMC <span class="tag">Tle</span></label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="Maths complémentaires (Tle)"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Maths complémentaires <span class="tag">Tle</span></label>
+            <label class="pill-b" onclick="toggle(this)"><input type="checkbox" value="Maths expertes (Tle)"><span class="pill-check"><i class="ti ti-check" style="font-size:9px"></i></span> Maths expertes <span class="tag">Tle</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOTIF -->
+    <div class="sec">
+      <p class="stitle stitle-m"><i class="ti ti-message" style="font-size:13px"></i> Motif <span class="req">*</span></p>
+      <div class="motif-card">
+        <textarea id="motif" placeholder="Expliquez brièvement les raisons de votre demande…"></textarea>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <button class="btn-submit" onclick="soumettre()">
+      <i class="ti ti-send" style="font-size:16px"></i> Soumettre la demande
+    </button>
+    <div id="f-msg" class="msg"></div>
+
+  </div><!-- /form-body -->
+
+  <!-- Confirmation -->
+  <div id="confirmation">
+    <div class="big-icon"><i class="ti ti-circle-check"></i></div>
+    <h2>Demande enregistrée</h2>
+    <p>Votre demande a bien été transmise à l'administration.<br>Elle sera examinée avec attention dans la limite des possibilités organisationnelles.</p>
+  </div>
+
+  <footer>Formulaire d'appariement — usage interne établissement</footer>
+
+</div><!-- /page-wrap -->
+
+<script>
+  function toggle(lbl) {
+    const cb = lbl.querySelector('input[type=checkbox]');
+    cb.checked = !cb.checked;
+    lbl.classList.toggle('checked', cb.checked);
+  }
+
+  function getChecked(id) {
+    return Array.from(document.querySelectorAll('#' + id + ' input:checked')).map(c => c.value);
+  }
+
+  function showMsg(type, txt) {
+    const el = document.getElementById('f-msg');
+    el.className = 'msg msg-' + type;
+    el.textContent = txt;
+    el.style.display = 'block';
+    if (type === 'ok') setTimeout(() => { el.style.display = 'none'; }, 5000);
+  }
+
+  function soumettre() {
+    const aN  = document.getElementById('a-nom').value.trim();
+    const aP  = document.getElementById('a-prenom').value.trim();
+    const aNiv = document.getElementById('a-niveau').value;
+    const bN  = document.getElementById('b-nom').value.trim();
+    const bP  = document.getElementById('b-prenom').value.trim();
+    const bNiv = document.getElementById('b-niveau').value;
+    const motif = document.getElementById('motif').value.trim();
+
+    const miss = [];
+    if (!aN || !aP)  miss.push('nom et prénom (élève A)');
+    if (!aNiv)       miss.push('niveau (élève A)');
+    if (!bN || !bP)  miss.push('nom et prénom (élève B)');
+    if (!bNiv)       miss.push('niveau (élève B)');
+    if (!motif)      miss.push('motif');
+
+    if (miss.length) {
+      showMsg('err', 'Champs manquants : ' + miss.join(', ') + '.');
+      return;
+    }
+
+    const aLva  = document.getElementById('a-lva').value;
+    const aLvb  = document.getElementById('a-lvb').value;
+    const bLva  = document.getElementById('b-lva').value;
+    const bLvb  = document.getElementById('b-lvb').value;
+    const aEds  = getChecked('a-eds').join(', ') || '—';
+    const aOpts = getChecked('a-opts').join(', ') || '—';
+    const bEds  = getChecked('b-eds').join(', ') || '—';
+    const bOpts = getChecked('b-opts').join(', ') || '—';
+
+    const corps =
+`DEMANDE D'APPARIEMENT
+${'='.repeat(44)}
+
+ÉLÈVE A (demandeur)
+${'-'.repeat(30)}
+Nom      : ${aN}
+Prénom   : ${aP}
+Niveau   : ${aNiv}
+LVA      : ${aLva}
+LVB      : ${aLvb}
+EDS      : ${aEds}
+Options  : ${aOpts}
+
+ÉLÈVE B (demandé·e)
+${'-'.repeat(30)}
+Nom      : ${bN}
+Prénom   : ${bP}
+Niveau   : ${bNiv}
+LVA      : ${bLva}
+LVB      : ${bLvb}
+EDS      : ${bEds}
+Options  : ${bOpts}
+
+MOTIF
+${'-'.repeat(30)}
+${motif}`;
+
+    const sujet = encodeURIComponent("Demande d'appariement – " + aP + " " + aN + " / " + bP + " " + bN);
+    window.location.href = 'mailto:?subject=' + sujet + '&body=' + encodeURIComponent(corps);
+
+    // Afficher la confirmation
+    document.getElementById('form-body').style.display = 'none';
+    document.getElementById('confirmation').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
